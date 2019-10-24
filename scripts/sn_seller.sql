@@ -42,12 +42,16 @@ create table seller (
     paymentTypes varchar(10), -- 支持的支付方式，多个`,`号隔开 enum { 1: '货到付款', 2: '支付宝', 3: '微信' }
     description varchar(400), -- 商户简介
     status int(2), -- 状态: enum { 1: '审核通过', 0: '审核失败', 2: '审核中' }
+    descScore decimal(2,1),
+    servScore decimal(2,1),
+    postScore decimal(2,1),
+    scoreCount int(10),
     approver varchar(30), -- 审批人
     approveDt timestamp, -- 审批时间
     unique nameIndex (name) -- name 唯一索引
 ) auto_increment=10001;
 
-insert into seller (id,name,type,mobilePhone,accountId,addDt,paymentTypes,description,status) values (10000,'平台商户',4,null,1,NOW(),'1,2,3','平台商户',1);
+insert into seller (id,name,type,mobilePhone,accountId,addDt,paymentTypes,description,status,descScore,servScore,postScore,scoreCount) values (10000,'平台商户',4,null,1,NOW(),'1,2,3','平台商户',1,5,5,5,100);
 
 -- O2O店铺，商家可在后台创建O2O门店，O2O库存和B2C库存独立
 create table o2oShop (

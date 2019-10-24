@@ -1,6 +1,5 @@
 const { Service } = require('sonorpc');
-
-const PAGE_STATUS_ERROR = { success: false, code: 11000, message: '页面状态错误!' };
+const { PARAM_ERROR } = require('../constants/error');
 
 class SellerService extends Service {
     async listPlatformSellers({ status }) {
@@ -15,6 +14,20 @@ class SellerService extends Service {
 
         const rows = await this.ctx.mysql.query('select id,name,type,logo,mobilePhone,accountId,addDt,paymentTypes,description,status from seller where ' + where, args);
         return { success: true, code: 0, data: rows };
+    }
+
+    async listSellerByIds(sellerIds) {
+        if (sellerIds.some(id => !/^\d+$/.test(id))) {
+            return PARAM_ERROR;
+        }
+
+        const rows = await this.ctx.mysql.query(`select id,name,type,logo,status from seller where status!=0 and id in (${sellerIds.join(',')})`);
+        return { success: true, code: 0, data: rows };
+    }
+
+    async getSellerInfoById(sellerId) {
+        const rows = await this.ctx.mysql.query('select id,name,type,logo,descScore,servScore,postScore,accountId,addDt,description from seller where status=1 and id=@p0', [sellerId]);
+        return { success: true, code: 0, data: rows && rows[0] };
     }
 
     async addSeller({
