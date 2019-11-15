@@ -53,6 +53,17 @@ create table seller (
 
 insert into seller (id,name,type,mobilePhone,accountId,addDt,paymentTypes,description,status,descScore,servScore,postScore,scoreCount) values (10000,'平台商户',4,null,1,NOW(),'1,2,3','平台商户',1,5,5,5,100);
 
+create table sellerAccountRel (
+    id int(10) primary key auto_increment,
+    accountId int(11),
+    sellerId int(10),
+    role int(1), -- 角色: enum { 3: '商户超级管理员', 4: '商户运营' }
+    createAt timestamp,
+    updateAt timestamp
+);
+
+insert into sellerAccountRel (accountId,sellerId,role,createAt) values (1,10000,3,NOW());
+
 -- O2O店铺，商家可在后台创建O2O门店，O2O库存和B2C库存独立
 create table o2oShop (
     id int(10) primary key auto_increment,
