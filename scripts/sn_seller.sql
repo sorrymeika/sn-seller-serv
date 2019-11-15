@@ -11,17 +11,18 @@ FLUSH PRIVILEGES;
 -- 查看用户
 SELECT User, Host FROM mysql.user;
 
--- 创建数据库
-create database if not exists sn_seller;
-
--- 分配权限
-grant ALL on sn_seller.* to 'dev'@'localhost';
-
 -- 查看用户权限
 show grants for 'dev'@'localhost';
 
 -- 展示所有数据库
 show databases;
+
+
+-- 创建数据库
+create database if not exists sn_seller;
+
+-- 分配权限
+grant ALL on sn_seller.* to 'dev'@'localhost';
 
 -- 使用数据库
 use sn_seller;
@@ -63,11 +64,6 @@ create table sellerAccountRel (
 );
 
 insert into sellerAccountRel (accountId,sellerId,role,createAt) values (1,10000,3,NOW());
-
--- O2O店铺，商家可在后台创建O2O门店，O2O库存和B2C库存独立
-create table o2oShop (
-    id int(10) primary key auto_increment,
-);
 
 create table enterprise (
     sellerId int(10) primary key,
@@ -116,6 +112,12 @@ create table person (
     props json,
     status int(2) -- 状态
 );
+
+-- O2O店铺，商家可在后台创建O2O门店，O2O库存和B2C库存独立
+create table o2oShop (
+    id int(10) primary key auto_increment,
+);
+
 
 -- 收款账号表
 create table paymentAccount (
