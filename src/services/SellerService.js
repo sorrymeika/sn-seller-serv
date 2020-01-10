@@ -3,7 +3,7 @@ const { PARAM_ERROR } = require('../constants/error');
 
 class SellerService extends Service {
     async getSellersByAccountId(accountId) {
-        const rows = await this.ctx.mysql.query(
+        const rows = await this.app.mysql.query(
             `select a.id,name,type,logo,mobilePhone,a.accountId as adminId,a.addDt,paymentTypes,description,status,
                     b.accountId 
                 from seller a
@@ -15,7 +15,7 @@ class SellerService extends Service {
     }
 
     async isMySeller(accountId, sellerId) {
-        const rows = await this.ctx.mysql.query(
+        const rows = await this.app.mysql.query(
             `select a.id 
                 from seller a
                 inner join sellerAccountRel b on a.id=b.sellerId
@@ -26,7 +26,7 @@ class SellerService extends Service {
     }
 
     async listMySellerIds(accountId) {
-        const rows = await this.ctx.mysql.query(
+        const rows = await this.app.mysql.query(
             `select a.id 
                 from seller a
                 inner join sellerAccountRel b on a.id=b.sellerId
@@ -46,7 +46,7 @@ class SellerService extends Service {
             args.push(status);
         }
 
-        const rows = await this.ctx.mysql.query('select id,name,type,logo,mobilePhone,accountId,addDt,paymentTypes,description,status from seller where ' + where, args);
+        const rows = await this.app.mysql.query('select id,name,type,logo,mobilePhone,accountId,addDt,paymentTypes,description,status from seller where ' + where, args);
         return { success: true, code: 0, data: rows };
     }
 
@@ -55,12 +55,12 @@ class SellerService extends Service {
             return PARAM_ERROR;
         }
 
-        const rows = await this.ctx.mysql.query(`select id,name,type,logo,status from seller where status!=0 and id in (${sellerIds.join(',')})`);
+        const rows = await this.app.mysql.query(`select id,name,type,logo,status from seller where status!=0 and id in (${sellerIds.join(',')})`);
         return { success: true, code: 0, data: rows };
     }
 
     async getSellerInfoById(sellerId) {
-        const rows = await this.ctx.mysql.query('select id,name,type,logo,descScore,servScore,postScore,accountId,addDt,description from seller where status=1 and id=@p0', [sellerId]);
+        const rows = await this.app.mysql.query('select id,name,type,logo,descScore,servScore,postScore,accountId,addDt,description from seller where status=1 and id=@p0', [sellerId]);
         return { success: true, code: 0, data: rows && rows[0] };
     }
 
@@ -74,7 +74,7 @@ class SellerService extends Service {
         paymentTypes,
         description
     }) {
-        const res = await this.ctx.mysql.useTransaction(async (conn) => {
+        const res = await this.app.mysql.useTransaction(async (conn) => {
             const sellerRes = await conn.insert('seller', {
                 name,
                 type,
