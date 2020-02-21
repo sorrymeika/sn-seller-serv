@@ -1,3 +1,12 @@
+exports.provider = {
+    name: 'seller',
+    port: 3011,
+};
+
+exports.registry = {
+    port: 3006
+};
+
 exports.mysql = {
     connectionLimit: 2,
     host: 'localhost',
